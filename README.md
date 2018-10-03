@@ -47,13 +47,27 @@ npm install
 
 + `C/C++`
 
-## 编译C++为wasm
+## 编译C++
+
+### 编译到 wasm + js
 
 ```
-bash build-wasm.sh
+npm run build-wasm
 ```
 
 编译后的.wasm文件及其js加载器存放在wasm目录下。
+
+### 编译到 asm.js
+
+```
+npm run build-asm
+```
+
+### 同时输出wasm+js和asm.js
+
+```
+npm run build
+```
 
 更多编译细节：[访问emscripten官方文档](http://kripken.github.io/emscripten-site/docs/getting_started/Tutorial.html)
 
