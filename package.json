@@ -1,5 +1,5 @@
 {
-  "name": "@omjs/emscripten-demo",
+  "name": "@om-wasm/emscripten-demo",
   "version": "1.0.2",
   "description": "a demo using emscripten",
   "main": "server.js",
