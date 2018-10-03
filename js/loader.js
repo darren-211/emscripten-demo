@@ -1,7 +1,8 @@
 /**
  * 加载文件
- * @param {string} url 
- * @param {string} type 
+ * @param {string} url 文件路径
+ * @param {'text' | 'blob' | 'arrayBuffer'} type 文件类型
+ * @returns {Promise<string | Blob | ArrayBuffer>}
  */
 export function loadFile(url, type = 'text') {
     return fetch(url, { credentials: 'same-origin' })
@@ -10,8 +11,8 @@ export function loadFile(url, type = 'text') {
 
 /**
  * 加载wasm模块
- * @param {string} url 
- * @param {*} imports 
+ * @param {string} url 文件路径
+ * @param {*} imports 初始化参数
  */
 export function loadWebAssembly(url, imports = {}) {
     return loadFile(url, 'arrayBuffer')
@@ -38,8 +39,8 @@ export function loadWebAssembly(url, imports = {}) {
  * 加载wasm模块加载器(js文件)，回调方式
  * @param {string} jsURL wasm加载器url
  * @param {string} wasmURL wasm文件url
- * @param {Function} successCB 
- * @param {Function} errorCB 
+ * @param {(module: EMModule) => any} successCB 
+ * @param {(error: any) => any} errorCB 
  */
 export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
     const jsLoader = loadFile(jsURL, 'text').then(code => new Function('imports', `var Module=imports;${code};return Module;`));
@@ -62,7 +63,8 @@ export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
 /**
  * 加载wasm模块加载器(js文件)，Promise方式
  * @param {string} jsURL 
- * @param {string} wasmURL 
+ * @param {string} wasmURL
+ * @return {Promise<EMModule>}
  */
 export function loadWasmJS(jsURL, wasmURL) {
     return new Promise((resolve, reject) => {
