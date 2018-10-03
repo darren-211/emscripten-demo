@@ -28,7 +28,7 @@ export class Vector<T> extends Iterable<T> {
      * @param index 下标索引
      * @param value 值
      */
-    set(index: size_t, value: T): void;
+    set(index: size_t, value: T): bool;
     /**
      * 获取某项的值
      * @param index 下标索引

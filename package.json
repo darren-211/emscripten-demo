@@ -1,6 +1,6 @@
 {
   "name": "@om-wasm/emscripten-demo",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a demo using emscripten",
   "main": "server.js",
   "types": "types/index.d.ts",
