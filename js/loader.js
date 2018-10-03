@@ -44,7 +44,7 @@ export function loadWebAssembly(url, imports = {}) {
  */
 export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
     const jsLoader = loadFile(jsURL, 'text').then(code => new Function('imports', `var Module=imports;${code};return Module;`));
-    const wasmLoader = loadFile(wasmURL, 'arrayBuffer');
+    const wasmLoader = wasmURL && loadFile(wasmURL, 'arrayBuffer');
     Promise.all([jsLoader, wasmLoader])
         .then(([factory, wasmBinary]) => {
             const Module = wasmBinary ? { wasmBinary } : {};
@@ -62,12 +62,31 @@ export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
 
 /**
  * 加载wasm模块加载器(js文件)，Promise方式
- * @param {string} jsURL 
- * @param {string} wasmURL
+ * @param {string} fileKey
  * @return {Promise<EMModule>}
  */
-export function loadWasmJS(jsURL, wasmURL) {
+export function loadWasmJS(fileKey) {
+    const jsURL = fileKey + '.js';
+    const wasmURL = fileKey + '.wasm';
     return new Promise((resolve, reject) => {
         loadWasmJSByCallback(jsURL, wasmURL, resolve, reject);
     });
+}
+
+/**
+ * 加载wasm模块，返回Promise，自动检测浏览器是否支持WebAssembly
+ * 若支持WebAssembly则加载 `${fileKey}.js`（依赖`${fileKey}.wasm`)
+ * 否则加载`${fileKey}.asm.js`
+ * @param {string} fileKey 
+ * @returns {Promise<EMModule>}
+ */
+export function loadWasmModule(fileKey) {
+    if (window.WebAssembly) {
+        return loadWasmJS(fileKey);
+    } else {
+        const asmURL = fileKey + '.asm.js';
+        return new Promise((resolve, reject) => {
+            loadWasmJSByCallback(asmURL, undefined, resolve, reject);
+        });
+    }
 }

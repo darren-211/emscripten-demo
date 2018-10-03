@@ -1,0 +1,1 @@
+emcc cpp/main.cpp -Oz -s WASM=0 -o wasm/main.asm.js --bind --closure 2 -s NODEJS_CATCH_EXIT=0 -s EXPORT_NAME='Module' -s SINGLE_FILE=1

@@ -1,12 +1,14 @@
 {
   "name": "@om-wasm/emscripten-demo",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a demo using emscripten",
   "main": "server.js",
   "types": "types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-wasm": "rm -rf wasm/* && ./build-wasm.sh",
+    "build-wasm": "bash bash/build-wasm.sh",
+    "build-asm": "bash bash/build-asm.sh",
+    "build": "rm -rf wasm/* && npm run build-wasm && npm run build-asm",
     "start": "node server.js"
   },
   "repository": {

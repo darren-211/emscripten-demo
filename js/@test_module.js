@@ -1,12 +1,12 @@
-import { loadWasmJS } from './loader.js';
+import { loadWasmModule } from './loader.js';
 
 /**
  * 加载wasm模块
  * @returns {Promise<TestModule>}
  */
-async function loadModule(){
+export async function loadModule(){
     console.time('wasm loaded');
-    const Module = await loadWasmJS('/wasm/main.js', '/wasm/main.wasm');
+    const Module = await loadWasmModule('/wasm/main');
     console.timeEnd('wasm loaded');
 
     ['Vector', 'Int8Array', 'Uint8Array', 'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 'Int64Array', 'Uint64Array', 'Float32Array', 'Float64Array', 'PointArray'].forEach(ctor => {
