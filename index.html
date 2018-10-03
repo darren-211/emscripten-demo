@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Emscripten Demo</title>
+</head>
+
+<body>
+    <script nomodule>
+        var div = document.createElement('div');
+        div.style.cssText = 'margin-top:50px;font-size:24px;text-align:center;line-height:48px;color:#f33;';
+        div.innerHTML = '（*+﹏+*）还在用山寨浏览器？<br><a href="https://www.google.cn/chrome/">点击前往下载正版浏览器</a>';
+        document.body.appendChild(div);
+    </script>
+    <script type="module" src="js/loader.js"></script>
+    <script type="module" src="js/@test_module.js"></script>
+    <script type="module">
+        import ASYNC_TEST_MODULE from './js/@test_module.js';
+        (async () => {
+            // 加载异步模块
+            const start = Date.now();
+            const Module = await ASYNC_TEST_MODULE;
+            const end = Date.now();
+            window.Module = Module;
+            console.log('wasm模块已成功加载，通过window.Module即可访问:', Module);
+            var div = document.createElement('div');
+            div.style.cssText = 'margin-top:50px;font-size:24px;text-align:center;line-height:48px;color:#0086cd;';
+            div.innerHTML = `历经${end - start}ms, wasm模块加载成功。<br>打开你的浏览器Console，开始尽情玩耍吧！`;
+            document.body.appendChild(div);
+
+            // 二次加载同一个模块耗时测试
+            console.time('load module twice');
+            const Module2 = await ASYNC_TEST_MODULE;
+            console.timeEnd('load module twice');
+        })();
+    </script>
+</body>
+
+</html>

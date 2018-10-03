@@ -1,0 +1,25 @@
+{
+  "name": "@omjs/emscripten-demo",
+  "version": "1.0.0",
+  "description": "a demo using emscripten",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-wasm": "rm -rf wasm/* && ./build-wasm.sh",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.coding.net/oyzhen/emscripten-demo.git"
+  },
+  "keywords": [
+    "emscripten",
+    "cpp",
+    "WebAssembly"
+  ],
+  "author": "study@oyzhen.me",
+  "license": "MIT",
+  "dependencies": {
+    "live-server": "^1.2.0"
+  }
+}
