@@ -2,8 +2,7 @@ import { loadFile, loadWasmJS } from './loader.js';
 
 const ASYNC_TEST_MODULE = (async () => {
     console.time('wasm loaded');
-    const wasmBinary = await loadFile('/wasm/main.wasm', 'arrayBuffer');
-    const Module = await loadWasmJS('/wasm/main.js', wasmBinary);
+    const Module = await loadWasmJS('/wasm/main.js', '/wasm/main.wasm');
     console.timeEnd('wasm loaded');
 
     ['Vector', 'Int8Array', 'Uint8Array', 'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 'Int64Array', 'Uint64Array', 'Float32Array', 'Float64Array'].forEach(ctor => {

@@ -36,15 +36,16 @@ export function loadWebAssembly(url, imports = {}) {
 
 /**
  * 加载wasm模块加载器(js文件)，回调方式
- * @param {string} url 
- * @param {ArrayBuffer} wasmBinary 
+ * @param {string} jsURL wasm加载器url
+ * @param {string} wasmURL wasm文件url
  * @param {Function} successCB 
  * @param {Function} errorCB 
  */
-export function loadWasmJSByCallback(url, wasmBinary, successCB, errorCB) {
-    loadFile(url, 'text')
-        .then(code => new Function('imports', `var Module=imports;${code};return Module;`))
-        .then(factory => {
+export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
+    const jsLoader = loadFile(jsURL, 'text').then(code => new Function('imports', `var Module=imports;${code};return Module;`));
+    const wasmLoader = loadFile(wasmURL, 'arrayBuffer');
+    Promise.all([jsLoader, wasmLoader])
+        .then(([factory, wasmBinary]) => {
             const Module = wasmBinary ? { wasmBinary } : {};
             Module.onRuntimeInitialized = () => {
                 successCB && successCB(Module);
@@ -53,20 +54,18 @@ export function loadWasmJSByCallback(url, wasmBinary, successCB, errorCB) {
                 errorCB && errorCB(error);
             };
             factory(Module);
-            return Module;
-        })
-        .catch(error => {
+        }).catch(error => {
             errorCB && errorCB(error);
         });
 }
 
 /**
  * 加载wasm模块加载器(js文件)，Promise方式
- * @param {string} url 
- * @param {ArrayBuffer} wasmBinary 
+ * @param {string} jsURL 
+ * @param {string} wasmURL 
  */
-export function loadWasmJS(url, wasmBinary) {
+export function loadWasmJS(jsURL, wasmURL) {
     return new Promise((resolve, reject) => {
-        loadWasmJSByCallback(url, wasmBinary, resolve, reject);
+        loadWasmJSByCallback(jsURL, wasmURL, resolve, reject);
     });
 }
