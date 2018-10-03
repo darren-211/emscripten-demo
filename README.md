@@ -47,6 +47,8 @@ npm install
 
 + `C/C++`
 
+需要配置.vscode/c_cpp_properties.json，以便VSCode语法高亮和智能提示
+
 ## 编译C++
 
 ### 编译到 wasm + js
