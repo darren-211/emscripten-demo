@@ -1,5 +1,5 @@
 /**
- * 加载文件
+ * 按指定类型加载文件
  * @param {string} url 文件路径
  * @param {'text' | 'blob' | 'arrayBuffer'} type 文件类型
  * @returns {Promise<string | Blob | ArrayBuffer>}
@@ -10,7 +10,7 @@ export function loadFile(url, type = 'text') {
 }
 
 /**
- * 加载wasm模块
+ * 直接通过wasm文件加载wasm模块
  * @param {string} url 文件路径
  * @param {*} imports 初始化参数
  */
@@ -36,13 +36,13 @@ export function loadWebAssembly(url, imports = {}) {
 }
 
 /**
- * 加载wasm模块加载器(js文件)，回调方式
+ * 加载emscripten-wasm模块，回调方式
  * @param {string} jsURL wasm加载器url
  * @param {string} wasmURL wasm文件url
  * @param {(module: EMModule) => any} successCB 
  * @param {(error: any) => any} errorCB 
  */
-export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
+function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
     const jsLoader = loadFile(jsURL, 'text').then(code => new Function('imports', `var Module=imports;${code};return Module;`));
     const wasmLoader = wasmURL && loadFile(wasmURL, 'arrayBuffer');
     Promise.all([jsLoader, wasmLoader])
@@ -61,8 +61,8 @@ export function loadWasmJSByCallback(jsURL, wasmURL, successCB, errorCB) {
 }
 
 /**
- * 加载wasm模块加载器(js文件)，Promise方式
- * @param {string} fileKey
+ * 加载emscripten-wasm模块，Promise方式
+ * @param {string} fileKey 文件名（带路径，不含后缀）
  * @return {Promise<EMModule>}
  */
 export function loadWasmJS(fileKey) {
@@ -74,19 +74,23 @@ export function loadWasmJS(fileKey) {
 }
 
 /**
- * 加载wasm模块，返回Promise，自动检测浏览器是否支持WebAssembly
+ * 加载emscripten-asm.js模块，Promise
+ * @param {string} fileKey 文件名（带路径，不含后缀）
+ * @returns {Promise<EMModule>}
+ */
+export function loadAsmJS(fileKey) {
+    const asmURL = fileKey + '.asm.js';
+    return new Promise((resolve, reject) => {
+        loadWasmJSByCallback(asmURL, undefined, resolve, reject);
+    });
+}
+
+/**
+ * 加载emscripten-wasm/asm.js模块，返回Promise
+ * 自动检测浏览器是否支持WebAssembly
  * 若支持WebAssembly则加载 `${fileKey}.js`（依赖`${fileKey}.wasm`)
  * 否则加载`${fileKey}.asm.js`
  * @param {string} fileKey 
  * @returns {Promise<EMModule>}
  */
-export function loadWasmModule(fileKey) {
-    if (window.WebAssembly) {
-        return loadWasmJS(fileKey);
-    } else {
-        const asmURL = fileKey + '.asm.js';
-        return new Promise((resolve, reject) => {
-            loadWasmJSByCallback(asmURL, undefined, resolve, reject);
-        });
-    }
-}
+export const loadWasmModule = window.WebAssembly ? loadWasmJS : loadAsmJS;

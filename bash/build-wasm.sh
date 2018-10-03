@@ -1,1 +1,1 @@
-emcc cpp/main.cpp -Oz -s WASM=1 -o wasm/main.js --bind --closure 1 -s NODEJS_CATCH_EXIT=0 -s EXPORT_NAME='Module'
+emcc cpp/embind.cpp -Oz -s WASM=1 -o wasm/test.js --bind --closure 1 -s NODEJS_CATCH_EXIT=0 -s EXPORT_NAME='Module'
