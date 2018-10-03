@@ -35,5 +35,10 @@ import ASYNC_TEST_MODULE from './js/@test_module.js';
     console.log('vec.delete()');
     vec.delete();
     console.log('vec.isDeleted(): ', vec.isDeleted());
-    console.log('vec.size(): ', vec.size()); // 当内存回收后调用size方法会报错
+    try {
+        console.log('vec.size(): ', vec.size()); // 当内存回收后调用size方法会报错
+    } catch (error) {
+        console.log('vec.size() caught an error: ', error);
+    }
+    
 })();
